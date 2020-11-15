@@ -1,8 +1,9 @@
 # lvm-luks
 
 This script will setup something similiar to this. You can add as many extra LV:S you wish by editing the variable, EXTRA_LVS
-SETUP
-```
+
+
+```layout
 +-----------------------------------------------------------------------+ +----------------+
 | Logical volume 1      | Logical volume 2      | Logical volume 3      | | Boot partition |
 |                       |                       |                       | |                |
