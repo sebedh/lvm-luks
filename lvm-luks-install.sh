@@ -61,7 +61,7 @@ parted ${DISK} -- mkpart primary 512MiB 100%
 echo "SETTING UP BOOT PARTITIONS"
 parted ${DISK} -- mkpart esp fat32 1MiB 512MiB
 parted ${DISK} -- set 2 esp on
-mkfs.fat -F 32 -n boot ${DISK}/${BOOT_PARTITION}
+mkfs.fat -F 32 -n boot ${BOOT_PART}
 
 # SETUP CRYPT FOR DISK ENCRYPTION
 cryptsetup -y -v --type luks2 luksFormat ${ROOT_PART} -d /tmp/lukspassword
@@ -85,14 +85,14 @@ for lv in ${!EXTRA_LVS[@]}; do
 done
 
 # SETUP SWAP
+echo "Setting up extra LVS"
 if [ ${SWAP_ON} == "true" ]; then 
 	echo "Creating SWAP LV with size ${SWAP_SIZE}G"
 	lvcreate -n swap -L ${SWAP_SIZE}G ${VG_NAME}
-	mkswap -L swap -n ${SWAP_DEV}
+	mkswap -L swap ${SWAP_DEV}
 else
 	echo "Skipping SWAP"
 fi
-
 
 ########### MOUNTING ############
 
