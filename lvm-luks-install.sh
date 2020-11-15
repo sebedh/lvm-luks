@@ -142,7 +142,7 @@ if [ "${DISTRIBUTION}" = "NixOS" ]; then
 	nixos-generate-config --root /mnt
 	CRYPT_UUID=`blkid | grep "TYPE=\"crypto_LUKS\"" | cut -d "\"" -f2`
 	echo "$CRYPT_UUID" > /tmp/uuid_crypt
-	sed '/^\s+boot.loader.grub.version*/a boot.initrd.luks.devices.crypted.device = "/dev/disk/by-uuid/${CRYPT_UUID}"';
+	sed -ei '/boot.loader.grub.version*/a \ \ boot.initrd.luks.devices.crypted.device = \"/dev/disk/by-uuid/${CRYPT_UUID}\";';
 
 fi
 
