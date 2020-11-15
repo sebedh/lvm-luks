@@ -8,7 +8,7 @@ EOF
 echo -n "Enter Password: "
 read -rs CRYPT_PASSWORD
 if [ ${#CRYPT_PASSWORD} -lt 8 ]; then echo "Password Too Short"; exit
-else echo ${CRYPT_PASSWORD} > /tmp/lukspassword
+else echo -n ${CRYPT_PASSWORD} > /tmp/lukspassword
 fi
 
 if [ -f /tmp/lukspassword ]; then echo "Password is set and saved to /tmp/lukspassword"
@@ -142,7 +142,7 @@ if [ "${DISTRIBUTION}" = "NixOS" ]; then
 	nixos-generate-config --root /mnt
 	CRYPT_UUID=`blkid | grep "TYPE=\"crypto_LUKS\"" | cut -d "\"" -f2`
 	echo "$CRYPT_UUID" > /tmp/uuid_crypt
-	sed -ei '/boot.loader.grub.version*/a \ \ boot.initrd.luks.devices.crypted.device = \"/dev/disk/by-uuid/'"$CRYPT_UUID"'\";'
+	sed -i '14 i \ \ boot.initrd.luks.devices.crypted.device = \"/dev/disk/by-uuid/'"$CRYPT_UUID"'\";'
 fi
 
 echo "Done, now continue manually, saved uuid of crypt device in /tmp/uuid_crypt"
