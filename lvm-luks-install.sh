@@ -23,15 +23,24 @@ else
 	echo "Using ${DISK} to setup encrypted disk on. IT WILL BE WIPED!!"
 fi
 
-read -p "Are you sure, it will wiped? ([yY]es)" -n 1 -r
+while true; do
+	read -p "Are you sure, it will wiped? ([yY]|[nN])\n" -n 1 yn
+	case $yn in
+		[Yy]* ) break;;
+		[Nn]* ) exit;;
+		* ) echo "[Yy]es or [Nn]o.";;
+	esac
+done
 echo
-if [ ! $REPLY =~ ^[Yy]$ ]; then exit; fi
+echo "Installing NixOS?"
+select yn in "Yes" "No"; do
+	case $yn in
+		Yes) DISTRIBUTION="NixOS";;
+		No) exit;;
+	esac
+done
 
-read -p "Installing NixOS?" -n 1 -r
 echo
-if [ ! $REPLY =~ ^[Yy]$ ]; then 
-	export DISTRIBUTION="NixOS"
-fi
 
 ############## VARIABLE SETTINGS
 
@@ -76,6 +85,7 @@ parted ${DISK} -- mkpart esp fat32 1MiB 512MiB
 parted ${DISK} -- set 2 esp on
 
 if [ -b ${BOOT_PART} ]; then 
+	echo "Formating ${BOOT_PART}"
 	mkfs.fat -F 32 -n boot ${BOOT_PART}
 else
 	echo "Could not find boot block device"
@@ -105,7 +115,7 @@ done
 
 # SETUP SWAP
 echo "Setting up extra LVS"
-if [ ${SWAP_ON} == "true" ]; then 
+if [ "${SWAP_ON}" = "true" ]; then 
 	echo "Creating SWAP LV with size ${SWAP_SIZE}G"
 	lvcreate -n swap -L ${SWAP_SIZE}G ${VG_NAME}
 	mkswap -L swap ${SWAP_DEV}
@@ -124,7 +134,7 @@ for lv in ${!EXTRA_LVS[@]}; do
 	mount /dev/${VG_NAME}/${lv} /mnt/${lv}
 done
 
-if [ -z ${DISTRIBUTION+x} ] && [ ${DISTRIBUTION} == "NixOS" ]; then
+if [ -z ${DISTRIBUTION+x} ] && [ "${DISTRIBUTION}" = "NixOS" ]; then
 	nixos-generate-config --root /mnt
 fi
 
