@@ -142,7 +142,7 @@ if [ "${DISTRIBUTION}" = "NixOS" ]; then
 	nixos-generate-config --root /mnt
 	CRYPT_UUID=`blkid | grep "TYPE=\"crypto_LUKS\"" | cut -d "\"" -f2`
 	echo "$CRYPT_UUID" > /tmp/uuid_crypt
-	sed -i '14 i \ \ boot.initrd.luks.devices.crypted.device = \"/dev/disk/by-uuid/'"$CRYPT_UUID"'\";'
+	sed -i '14 i \ \ boot.initrd.luks.devices.crypted.device = \"/dev/disk/by-uuid/'"$CRYPT_UUID"'\";' /mnt/etc/nixos/configuration.nix
 fi
 
 echo "Done, now continue manually, saved uuid of crypt device in /tmp/uuid_crypt"
