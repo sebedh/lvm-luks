@@ -134,7 +134,7 @@ for lv in ${!EXTRA_LVS[@]}; do
 	mount /dev/${VG_NAME}/${lv} /mnt/${lv}
 done
 
-if [ -z ${DISTRIBUTION+x} ] && [ "${DISTRIBUTION}" = "NixOS" ]; then
+if [ "${DISTRIBUTION}" = "NixOS" ]; then
 	nixos-generate-config --root /mnt
 fi
 
