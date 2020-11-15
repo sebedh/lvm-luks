@@ -51,6 +51,10 @@ case ${DISK#/dev/} in
 		BOOT_PART="${DISK}2"
 		;;
 	nvme0)
+		ROOT_PART="${DISK}n1p1"
+		BOOT_PART="${DISK}n1p2"
+		;;
+	nvme0n1)
 		ROOT_PART="${DISK}p1"
 		BOOT_PART="${DISK}p2"
 		;;
@@ -136,6 +140,9 @@ done
 
 if [ "${DISTRIBUTION}" = "NixOS" ]; then
 	nixos-generate-config --root /mnt
+	CRYPT_UUID=`blkid | grep "TYPE=\"crypto_LUKS\"" | cut -d "\"" -f2`
+	echo "$CRYPT_UUID" > /tmp/uuid_crypt
+
 fi
 
-echo "Done, now continue manually"
+echo "Done, now continue manually, saved uuid of crypt device in /tmp/uuid_crypt"
