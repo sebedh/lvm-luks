@@ -24,9 +24,9 @@ else
 fi
 
 while true; do
-	read -p "Are you sure, it will wiped? ([yY]|[nN])\n" -n 1 yn
+	read -p "Are you sure, it will wiped? ([yY]|[nN])" -n 1 yn
 	case $yn in
-		[Yy]* ) break;;
+		[Yy]* ) echo; break;;
 		[Nn]* ) exit;;
 		* ) echo "[Yy]es or [Nn]o.";;
 	esac
@@ -35,7 +35,7 @@ echo
 echo "Installing NixOS?"
 select yn in "Yes" "No"; do
 	case $yn in
-		Yes) DISTRIBUTION="NixOS";;
+		Yes) DISTRIBUTION="NixOS"; break;;
 		No) exit;;
 	esac
 done
